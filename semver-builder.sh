@@ -93,7 +93,16 @@ if [ ! "$BRANCH" ]; then
     exit 1
 fi
 if [ "$BRANCH" != "master" ] && [ "$BRANCH" != "main" ]; then
-  echo -e "${RED_COLOR}ERROR${COLOR_OFF}: switch to main git branch!"
+  echo -e "${YELLOW_COLOR}WARNING${COLOR_OFF}: you checked out ${CYAN_COLOR}$BRANCH${COLOR_OFF} git branch!"
+  # shellcheck disable=SC2162
+  read -p "Continue? [y/N]: " yn
+      case $yn in
+          [Yy]* );;
+          * )
+            echo -e "${RED_COLOR}Aborted${COLOR_OFF}";
+            exit 0
+            ;;
+      esac
   exit 1;
 fi
 
