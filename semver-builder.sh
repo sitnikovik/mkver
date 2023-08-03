@@ -76,22 +76,22 @@ do
 
 # Development state
 case "$1" in
--pa | --pre-alpha)
+-pa)
   PREFIX="-pre-alpha"
   ;;
 esac
 case "$1" in
--a | --alpha)
+-a)
   PREFIX="-alpha"
   ;;
 esac
 case "$1" in
--b | --beta)
+-b)
   PREFIX="-beta"
   ;;
 esac
 case "$1" in
--rc | --release-candidate)
+-rc)
   PREFIX="-release-candidate"
   ;;
 esac
@@ -99,20 +99,24 @@ esac
 # Version description
 case "$1" in
 -m | --message)
-  echo -e "You specified version with description $YELLOW_COLOR\"$2\"$COLOR_OFF"
+  if [ ! "$2" ]; then
+    echo -e "${RED_COLOR}ERROR${COLOR_OFF}: provide message text"
+    exit 128
+  fi
+  echo -e "You specified version with description ${YELLOW_COLOR}\"$2\"${COLOR_OFF}"
   MESSAGE=$2
   ;;
 esac
 
 # Meta information
 case "$1" in
---meta)
+-mt)
+  if [ ! "$2" ]; then
+    echo -e "${RED_COLOR}ERROR${COLOR_OFF}: provide metadata"
+    exit 128
+  fi
   # Append custom meta to prefix
-  PREFIX="$PREFIX-$2"
-  ;;
--t | --timestamp)
-  # Append now date as timestamp to prefix
-  PREFIX="$PREFIX-$(date +%s)"
+  PREFIX="$PREFIX+$2"
   ;;
 esac
 
