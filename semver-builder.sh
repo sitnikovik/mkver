@@ -6,6 +6,7 @@ GREEN_COLOR='\033[0;32m'
 YELLOW_COLOR='\033[0;33m'
 CYAN_COLOR='\033[0;36m'
 COLOR_OFF='\033[0m'
+YELLOW_COLOR_BG='\033[43m'
 ###< Colors ###
 
 ###> Making version ###
@@ -68,9 +69,60 @@ else
   exit 128
 fi
 
-VERSION="v$VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH"
+#> Customize version
+PREFIX=""
+while [ -n "$1" ]
+do
 
-echo -e "Going to release ${YELLOW_COLOR}$VERSION${COLOR_OFF}"
+# Development state
+case "$1" in
+-pa | --pre-alpha)
+  PREFIX="-pre-alpha"
+  ;;
+esac
+case "$1" in
+-a | --alpha)
+  PREFIX="-alpha"
+  ;;
+esac
+case "$1" in
+-b | --beta)
+  PREFIX="-beta"
+  ;;
+esac
+case "$1" in
+-rc | --release-candidate)
+  PREFIX="-release-candidate"
+  ;;
+esac
+
+# Version description
+case "$1" in
+-m | --message)
+  echo -e "You specified version with description $YELLOW_COLOR\"$2\"$COLOR_OFF"
+  MESSAGE=$2
+  ;;
+esac
+
+# Meta information
+case "$1" in
+--meta)
+  # Append custom meta to prefix
+  PREFIX="$PREFIX-$2"
+  ;;
+-t | --timestamp)
+  # Append now date as timestamp to prefix
+  PREFIX="$PREFIX-$(date +%s)"
+  ;;
+esac
+
+shift
+done
+#< Customize version
+
+VERSION="v$VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH$PREFIX"
+
+echo -e "Going to release ${YELLOW_COLOR_BG}$VERSION${COLOR_OFF}"
 # shellcheck disable=SC2162
 read -p "Do you wish to make release? [y/N]: " yn
     case $yn in
@@ -83,8 +135,6 @@ read -p "Do you wish to make release? [y/N]: " yn
 ###< Making version ###
 
 ###> Deploying ###
-# Version description
-MESSAGE=$2
 
 # Git branch for version
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
