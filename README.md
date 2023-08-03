@@ -43,3 +43,8 @@ bash semver-builder.sh minor -b -mt "some_meta_info"
 # Makes minor as `0.1.0-beta` with tag message "Yet another version"
 bash semver-builder.sh minor -b -m "Yet another version"
 ```
+
+```shell
+# Makes version with wget
+bash <(wget -qO- https://raw.githubusercontent.com/sitnikovik/semver-builder/master/semver-builder.sh) 
+```
