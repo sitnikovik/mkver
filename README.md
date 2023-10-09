@@ -2,6 +2,19 @@
 
 Tool to build semantic versions for your project stored in Git.
 
+## Install
+
+Makes binary `svb` for your local user
+
+```shell
+bash <(wget -qO- https://raw.githubusercontent.com/sitnikovik/semver-builder/master/bin/installer)
+```
+
+There are
+- Options
+  - `-n` to make binary with your custom name ever you prefer. For example `-n command_name`
+  - `-f` to make binary without any confirms with default settins
+
 ## How to build
 
 ### Arguments and options
@@ -21,30 +34,30 @@ There are
 
 ```shell
 # Makes patch as `0.0.1`
-bash semver-builder.sh patch
+bash semver-builder patch
 ```
 
 ```shell
 # Makes minor as `0.1.0-beta`
-bash semver-builder.sh minor -b
+bash semver-builder minor -b
 ```
 
 ```shell
 # Makes minor as `0.1.0-beta+1691045114`
-bash semver-builder.sh minor -b -mt "$(date +%s)"
+bash semver-builder minor -b -mt "$(date +%s)"
 ```
 
 ```shell
 # Makes minor as `0.1.0-beta+some_meta_info`
-bash semver-builder.sh minor -b -mt "some_meta_info"
+bash semver-builder minor -b -mt "some_meta_info"
 ```
 
 ```shell
 # Makes minor as `0.1.0-beta` with tag message "Yet another version"
-bash semver-builder.sh minor -b -m "Yet another version"
+bash semver-builder minor -b -m "Yet another version"
 ```
 
 ```shell
 # Makes version with wget
-bash <(wget -qO- https://raw.githubusercontent.com/sitnikovik/semver-builder/master/semver-builder.sh) 
+bash <(wget -qO- https://raw.githubusercontent.com/sitnikovik/semver-builder/master/bin/semver-builder) 
 ```

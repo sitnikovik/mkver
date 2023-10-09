@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+###> Colors ###
+RED_COLOR='\033[0;31m'
+GREEN_COLOR='\033[0;32m'
+COLOR_OFF='\033[0m'
+YELLOW_COLOR_ULINE='\e[0;33m\e[4m'
+###< Colors ###
+
+BIN_NAME="svb"
+BUILDER_URL="https://raw.githubusercontent.com/sitnikovik/semver-builder/12-add-binary-file/bin/semver-builder"
+IS_FORCED=0
+
+#> Customize bin name
+while [ -n "$1" ]
+  do
+    case "$1" in
+    -n)
+      if [ ! "$2" ]; then
+        echo -e "${RED_COLOR}ERROR${COLOR_OFF}: provide bin name"
+        exit 128
+      fi
+      BIN_NAME="$2"
+      ;;
+    esac
+    case "$1" in
+    -f)
+      IS_FORCED=1
+      ;;
+    esac
+
+  shift
+done
+
+# shellcheck disable=SC2162
+if [ $IS_FORCED == 0 ]; then
+  echo -e "Going to make bin file ${YELLOW_COLOR_ULINE}${BIN_NAME}${COLOR_OFF}"
+  read -p "Continue? [y/N]: " yn
+    case $yn in
+        [Yy]* );;
+        * )
+          echo -e "${RED_COLOR}Aborted${COLOR_OFF}";
+          exit 0
+          ;;
+    esac
+fi
+
+# Getting bin content and make it executable
+sudo wget -qO /usr/local/bin/${BIN_NAME} ${BUILDER_URL} && sudo chmod 755 /usr/local/bin/${BIN_NAME}
+
+
+
+
+
