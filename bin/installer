@@ -8,7 +8,7 @@ YELLOW_COLOR_ULINE='\e[0;33m\e[4m'
 ###< Colors ###
 
 BIN_NAME="svb"
-BUILDER_URL="https://raw.githubusercontent.com/sitnikovik/semver-builder/12-add-binary-file/bin/semver-builder"
+BUILDER_URL="https://raw.githubusercontent.com/sitnikovik/semver-builder/master/bin/semver-builder"
 IS_FORCED=0
 
 #> Customize bin name
