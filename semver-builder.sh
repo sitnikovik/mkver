@@ -23,6 +23,8 @@ VERSION_MINOR=0
 VERSION_PATCH=0
 VERSION_TYPES_TAGS="major, minor, patch"
 
+PUSH_TO_GIT=0
+
 IFS='.'  # space is set as delimiter
 read -ra VERSION_PARTS <<< "$VERSION"   # str is read into an array as tokens separated by IFS
 
@@ -69,7 +71,7 @@ else
   exit 128
 fi
 
-#> Customize version
+###> Customize version ###
 PREFIX=""
 while [ -n "$1" ]
 do
@@ -120,9 +122,19 @@ case "$1" in
   ;;
 esac
 
+# Push to git
+case "$1" in
+-d)
+  echo "---------------------------------------"
+  echo -e "| ${YELLOW_COLOR}WARNING${COLOR_OFF}: Going to release to origin |"
+  echo "---------------------------------------"
+  PUSH_TO_GIT=1
+  ;;
+esac
+
 shift
 done
-#< Customize version
+###< Customize version ###
 
 VERSION="v$VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH$PREFIX"
 
@@ -139,44 +151,47 @@ read -p "Do you wish to make release? [y/N]: " yn
 ###< Making version ###
 
 ###> Deploying ###
-
 # Git branch for version
-BRANCH=$(git rev-parse --abbrev-ref HEAD)
-if [ ! "$BRANCH" ]; then
-    echo -e "${RED_COLOR}ERROR${COLOR_OFF}: local git branch not specified!"
-    exit 1
-fi
-if [ "$BRANCH" != "master" ] && [ "$BRANCH" != "main" ]; then
-  echo -e "${YELLOW_COLOR}WARNING${COLOR_OFF}: you checked out ${CYAN_COLOR}$BRANCH${COLOR_OFF} git branch!"
-  # shellcheck disable=SC2162
-  read -p "Continue? [y/N]: " yn
-      case $yn in
-          [Yy]* );;
-          * )
-            echo -e "${RED_COLOR}Aborted${COLOR_OFF}";
-            exit 0
-            ;;
-      esac
-  exit 1;
-fi
+if [ "$PUSH_TO_GIT" == 1 ]; then
+  BRANCH=$(git rev-parse --abbrev-ref HEAD)
+  if [ ! "$BRANCH" ]; then
+      echo -e "${RED_COLOR}ERROR${COLOR_OFF}: local git branch not specified!"
+      exit 1
+  fi
+  if [ "$BRANCH" != "master" ] && [ "$BRANCH" != "main" ]; then
+    echo -e "${YELLOW_COLOR}WARNING${COLOR_OFF}: you checked out ${CYAN_COLOR}$BRANCH${COLOR_OFF} git branch!"
+    # shellcheck disable=SC2162
+    read -p "Continue? [y/N]: " yn
+        case $yn in
+            [Yy]* );;
+            * )
+              echo -e "${RED_COLOR}Aborted${COLOR_OFF}";
+              exit 0
+              ;;
+        esac
+    exit 1;
+  fi
 
-if [ ! -d ./.git ]; then
-    echo -e "${RED_COLOR}ERROR${COLOR_OFF}: .git folder not found!"
-    exit 1
-fi
+  if [ ! -d ./.git ]; then
+      echo -e "${RED_COLOR}ERROR${COLOR_OFF}: .git folder not found!"
+      exit 1
+  fi
 
-git fetch --tags
-if [ "$MESSAGE" ]; then
-  git tag -a "$VERSION" -m "$MESSAGE" && \
-  git push && \
-  git push origin --tags && \
-  echo "$VERSION" > "$VERSION_FILE" && \
-  echo -e "${GREEN_COLOR}SUCCESS${COLOR_OFF}: $VERSION released!${COLOR_OFF}"
+  git fetch --tags
+  if [ "$MESSAGE" ]; then
+    git tag -a "$VERSION" -m "$MESSAGE" && \
+    git push && \
+    git push origin --tags && \
+    echo "$VERSION" > "$VERSION_FILE" && \
+    echo -e "${GREEN_COLOR}SUCCESS${COLOR_OFF}: $VERSION released to origin!${COLOR_OFF}"
+  else
+    git tag -a "$VERSION" -m "$MESSAGE" && \
+    git push && \
+    git push --tags && \
+    echo "$VERSION" > "$VERSION_FILE" && \
+    echo -e "${GREEN_COLOR}SUCCESS${COLOR_OFF}: $VERSION released to origin!${COLOR_OFF}"
+  fi
 else
-  git tag -a "$VERSION" -m "$MESSAGE" && \
-  git push && \
-  git push --tags && \
-  echo "$VERSION" > "$VERSION_FILE" && \
-  echo -e "${GREEN_COLOR}SUCCESS${COLOR_OFF}: $VERSION released!${COLOR_OFF}"
+    echo -e "${GREEN_COLOR}SUCCESS${COLOR_OFF}: $VERSION created at local!${COLOR_OFF}"
 fi
 ###< Deploying ###
