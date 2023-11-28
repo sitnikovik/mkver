@@ -4,7 +4,7 @@ Tool to build semantic versions for your project stored in Git.
 
 ## Install
 
-Makes binary `svb` for your local user
+Makes binary `mkver` for your local user
 
 ```shell
 bash <(wget -qO- https://raw.githubusercontent.com/sitnikovik/semver-builder/master/bin/installer)

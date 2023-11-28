@@ -7,7 +7,7 @@ COLOR_OFF='\033[0m'
 YELLOW_COLOR_ULINE='\e[0;33m\e[4m'
 ###< Colors ###
 
-BIN_NAME="svb"
+BIN_NAME="mkver"
 BUILDER_URL="https://raw.githubusercontent.com/sitnikovik/semver-builder/master/bin/semver-builder"
 IS_FORCED=0
 
