@@ -148,6 +148,8 @@ read -p "Do you wish to make release? [y/N]: " yn
           exit 0
           ;;
     esac
+
+echo "$VERSION" > "$VERSION_FILE"
 ###< Making version ###
 
 ###> Deploying ###
@@ -182,13 +184,11 @@ if [ "$PUSH_TO_GIT" == 1 ]; then
     git tag -a "$VERSION" -m "$MESSAGE" && \
     git push && \
     git push origin --tags && \
-    echo "$VERSION" > "$VERSION_FILE" && \
     echo -e "${GREEN_COLOR}SUCCESS${COLOR_OFF}: $VERSION released to origin!${COLOR_OFF}"
   else
     git tag -a "$VERSION" -m "$MESSAGE" && \
     git push && \
     git push --tags && \
-    echo "$VERSION" > "$VERSION_FILE" && \
     echo -e "${GREEN_COLOR}SUCCESS${COLOR_OFF}: $VERSION released to origin!${COLOR_OFF}"
   fi
 else
