@@ -15,6 +15,8 @@ VERSION_FILE=$WORKDIR/VERSION
 if [ ! -f "$VERSION_FILE" ]; then
   touch $VERSION_FILE
   echo -e "${YELLOW_COLOR}WARNING${COLOR_OFF}: Created ${CYAN_COLOR}$VERSION_FILE${COLOR_OFF} cause of not found";
+    VERSION="$(git describe --tags --abbrev=0)"
+    echo $VERSION > $VERSION_FILE
 fi
 VERSION="$(cat $VERSION_FILE)"
 VERSION=${VERSION:1}
