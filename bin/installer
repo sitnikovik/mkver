@@ -1,10 +1,10 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 ###> Colors ###
 RED_COLOR='\033[0;31m'
 GREEN_COLOR='\033[0;32m'
 COLOR_OFF='\033[0m'
-YELLOW_COLOR_ULINE='\e[0;33m\e[4m'
+YELLOW_COLOR_BG='\033[43m'
 ###< Colors ###
 
 BIN_NAME="mkver"
@@ -34,7 +34,7 @@ done
 
 # shellcheck disable=SC2162
 if [ $IS_FORCED == 0 ]; then
-  echo -e "Going to make bin file ${YELLOW_COLOR_ULINE}${BIN_NAME}${COLOR_OFF}"
+  echo -e "Going to make bin file ${YELLOW_COLOR_BG}${BIN_NAME}${COLOR_OFF}"
   read -p "Continue? [y/N]: " yn
     case $yn in
         [Yy]* );;
