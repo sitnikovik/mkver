@@ -24,8 +24,10 @@ VERSION_MAJOR=0
 VERSION_MINOR=0
 VERSION_PATCH=0
 VERSION_TYPES_TAGS="major, minor, patch"
+VERSION_MESSAGE=""
 
-PUSH_TO_GIT=0
+PUSH_TO_GIT=1 # Push to git by default
+FORCE=0 # Make it 1 to skip confirmation
 
 IFS='.'  # space is set as delimiter
 read -ra VERSION_PARTS <<< "$VERSION"   # str is read into an array as tokens separated by IFS
@@ -48,17 +50,17 @@ done
 if [ -n "$1" ]; then
   case "$1" in
   patch)
-    echo "Making patch..."
+    VERSION_MESSAGE="Making patch"
     (( VERSION_PATCH++ ))
     ;;
   minor)
-    echo "Making minor..."
+    VERSION_MESSAGE="Making minor"
     VERSION_PATCH=0
     (( VERSION_MINOR++ ))
     ;;
   major)
     echo -e "${RED_COLOR}WARNING${COLOR_OFF}: ${YELLOW_COLOR}Going to build major! Please ensure your doing...${COLOR_OFF}";
-    echo "Making major..."
+    VERSION_MESSAGE="Making major"
     VERSION_PATCH=0
     VERSION_MINOR=0
     (( VERSION_MAJOR++ ))
@@ -124,13 +126,19 @@ case "$1" in
   ;;
 esac
 
-# Push to git
+# Other options
 case "$1" in
--d)
-  echo "---------------------------------------"
-  echo -e "| ${YELLOW_COLOR}WARNING${COLOR_OFF}: Going to release to origin |"
-  echo "---------------------------------------"
-  PUSH_TO_GIT=1
+-f)
+  # Skip confirmation
+  FORCE=1
+  ;;
+esac
+
+# Define push to git or not
+case "$2" in
+local)
+  # Local version
+  PUSH_TO_GIT=0
   ;;
 esac
 
@@ -138,18 +146,33 @@ shift
 done
 ###< Customize version ###
 
+# Warning message where version will be released
+if [ "$PUSH_TO_GIT" == 1 ]; then
+  echo "-----------------------------------------"
+  echo -e "| ${YELLOW_COLOR}WARNING${COLOR_OFF}: ${VERSION_MESSAGE} with remote tag |"
+  echo "-----------------------------------------"
+else
+  echo "------------------------------------------------"
+  echo -e "| ${YELLOW_COLOR}WARNING${COLOR_OFF}: ${VERSION_MESSAGE} only in ${CYAN_COLOR}${VERSION_FILE}${COLOR_OFF} file |"
+  echo "------------------------------------------------"
+fi
+
+# Define version name
 VERSION="v$VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH$PREFIX"
 
-echo -e "Going to release ${YELLOW_COLOR_BG}$VERSION${COLOR_OFF}"
+# Confirming
 # shellcheck disable=SC2162
-read -p "Do you wish to make release? [y/N]: " yn
-    case $yn in
-        [Yy]* );;
-        * )
-          echo -e "${RED_COLOR}Aborted${COLOR_OFF}";
-          exit 0
-          ;;
-    esac
+if [ "$FORCE" == 0 ]; then
+  echo -e "Going to make ${YELLOW_COLOR_BG}$VERSION${COLOR_OFF}"
+  read -p "Do you wish to release? [y/N]: " yn
+      case $yn in
+          [Yy]* );;
+          * )
+            echo -e "${RED_COLOR}Aborted${COLOR_OFF}";
+            exit 0
+            ;;
+      esac
+fi
 
 echo "$VERSION" > "$VERSION_FILE"
 ###< Making version ###

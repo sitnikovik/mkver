@@ -13,7 +13,7 @@ bash <(wget -qO- https://raw.githubusercontent.com/sitnikovik/semver-builder/mas
 There are
 - Options
   - `-n` to make binary with your custom name ever you prefer. For example `-n command_name`
-  - `-f` to make binary without any confirms with default settins
+  - `-f` to make binary without any confirms with default settings
 
 ## How to build
 
@@ -22,6 +22,7 @@ There are
 There are 
 - Arguments
   - version type (one of `patch`, `minor`, `major`)
+  - `local` to make version with local tag without push to origin
 - Options
   - `-pa` to make *pre-alpha* version
   - `-a` to make *alpha* version
@@ -29,32 +30,38 @@ There are
   - `-rc` to make *release-candidate* version
   - `-m` to specify version with some description
   - `-mt` to specify version prefix with custom meta information
+  - `-f` to make version without any confirms
 
 ### Examples
 
 ```shell
 # Makes patch as `0.0.1`
-bash semver-builder patch
+bash mkver patch
 ```
 
 ```shell
 # Makes minor as `0.1.0-beta`
-bash semver-builder minor -b
+bash mkver minor -b
 ```
 
 ```shell
 # Makes minor as `0.1.0-beta+1691045114`
-bash semver-builder minor -b -mt "$(date +%s)"
+bash mkver minor -b -mt "$(date +%s)"
 ```
 
 ```shell
 # Makes minor as `0.1.0-beta+some_meta_info`
-bash semver-builder minor -b -mt "some_meta_info"
+bash mkver minor -b -mt "some_meta_info"
 ```
 
 ```shell
 # Makes minor as `0.1.0-beta` with tag message "Yet another version"
-bash semver-builder minor -b -m "Yet another version"
+bash mkver minor -b -m "Yet another version"
+```
+
+```shell
+# Makes patch as `0.0.1` with local tag
+bash mkver patch local
 ```
 
 ```shell
