@@ -31,6 +31,7 @@ There are
   - `-m` to specify version with some description
   - `-mt` to specify version prefix with custom meta information
   - `-f` to make version without any confirms
+  - `-h` to show help
 
 ### Examples
 

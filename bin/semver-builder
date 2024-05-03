@@ -7,6 +7,10 @@ YELLOW_COLOR='\033[0;33m'
 CYAN_COLOR='\033[0;36m'
 COLOR_OFF='\033[0m'
 YELLOW_COLOR_BG='\033[43m'
+
+ITALIC_TEXT='\033[3m'
+BOLD_TEXT='\033[1m'
+DIM_TEXT='\033[2m'
 ###< Colors ###
 
 ###> Making version ###
@@ -64,6 +68,30 @@ if [ -n "$1" ]; then
     VERSION_PATCH=0
     VERSION_MINOR=0
     (( VERSION_MAJOR++ ))
+    ;;
+  -h | --help | help)
+    # Print help.txt with shield for dot
+    HELP="${CYAN_COLOR}${BOLD_TEXT}${ITALIC_TEXT}$0${COLOR_OFF} is a simple tool to make version of your project.
+It is based on basic semantic versioning rules and can be used in any project.
+See more at https://semver\056com
+
+${BOLD_TEXT}Arguments${COLOR_OFF}
+    version type ${CYAN_COLOR}patch${COLOR_OFF}, ${CYAN_COLOR}minor${COLOR_OFF}, ${CYAN_COLOR}major${COLOR_OFF}
+    local ${DIM_TEXT}to make version with local tag without push to origin${COLOR_OFF}
+
+${BOLD_TEXT}Build options${COLOR_OFF}
+    -pa ${DIM_TEXT}to make pre-alpha version${COLOR_OFF}
+    -a ${DIM_TEXT}to make alpha version${COLOR_OFF}
+    -b ${DIM_TEXT}to make beta version${COLOR_OFF}
+    -rc ${DIM_TEXT}to make release-candidate version${COLOR_OFF}
+    -m ${DIM_TEXT}to specify version with some description${COLOR_OFF}
+    -mt ${DIM_TEXT}to specify version prefix with custom meta information${COLOR_OFF}
+
+${BOLD_TEXT}Other options${COLOR_OFF}
+    -f ${DIM_TEXT}to make version without any confirms${COLOR_OFF}
+"
+    echo -e $HELP
+    exit 0
     ;;
   *)
     echo -e "${RED_COLOR}ERROR${COLOR_OFF}: \"$1\" is unknown version type. Available: ${VERSION_TYPES_TAGS}"
@@ -126,13 +154,6 @@ case "$1" in
   ;;
 esac
 
-# Other options
-case "$1" in
--f)
-  # Skip confirmation
-  FORCE=1
-  ;;
-esac
 
 # Define push to git or not
 case "$2" in
